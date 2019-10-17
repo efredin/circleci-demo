@@ -1,9 +1,9 @@
 version: 2.1
 orbs:
-  heroku: circleci/heroku@1.0.0
+  heroku: circleci/heroku@0.0.8
 workflows:
   version: 2
-  testfirelabs-vnext-latest:
+  demo:
     jobs:
       - build
       - publish:
@@ -41,8 +41,8 @@ jobs:
             - repo
 
   publish:
-    working_directory: ~/repo
     executor: heroku/default # Uses the basic buildpack-deps image, which has the prerequisites for installing heroku's CLI.
+    working_directory: ~/repo
     steps:
       - attach_workspace:
           at: ~/
