@@ -2,14 +2,14 @@ import dotenv from 'dotenv';
 import axios from 'axios';
 import mongodb from 'mongodb';
 import * as http from 'http';
-
-dotenv.config({ path: './test/test.env' });
-const { PORT, CONNECTION_STRING, DATABASE } = process.env;
-
-const app = require('../src/app').default;
-const server = http.createServer(app);
+import createApp from '../src/app';
 
 describe('app', () => {
+    dotenv.config({ path: './test/test.env' });
+    const { PORT, CONNECTION_STRING, DATABASE } = process.env;
+
+    const app = createApp();
+    const server = http.createServer(app);
     const baseUrl = `http://localhost:${PORT}`;
 
     beforeAll(async () => {
