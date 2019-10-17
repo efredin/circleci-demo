@@ -22,7 +22,7 @@ jobs:
 
       - restore_cache:
           keys:
-          - node-{{ .Branch }}-{{ checksum "yarn-lock.json" }}
+          - node-{{ .Branch }}-{{ checksum "yarn.lock" }}
           - node-{{ .Branch }}-
 
       - run: yarn
@@ -30,7 +30,7 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: node-{{ .Branch }}-{{ checksum "yarn-lock.json" }}
+          key: node-{{ .Branch }}-{{ checksum "yarn.lock" }}
 
       - run: yarn run lint
       - run: yarn test
