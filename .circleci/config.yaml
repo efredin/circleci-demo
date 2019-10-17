@@ -1,0 +1,50 @@
+version: 2.1
+orbs:
+  heroku: circleci/heroku@0.0.8
+workflows:
+  version: 2
+  testfirelabs-vnext-latest:
+    jobs:
+      - build
+      - publish:
+          requires:
+            - build
+          filters:
+            branches:
+              only: setup
+jobs:
+  build:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+          - node-{{ .Branch }}-{{ checksum "yarn-lock.json" }}
+          - node-{{ .Branch }}-
+
+      - run: yarn
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: node-{{ .Branch }}-{{ checksum "yarn-lock.json" }}
+
+      - run: yarn run lint
+      - run: yarn test
+
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - repo
+
+  publish:
+    working_directory: ~/repo
+    executor: heroku/default # Uses the basic buildpack-deps image, which has the prerequisites for installing heroku's CLI.
+    steps:
+      - attach_workspace:
+          at: ~/
+      - heroku/install # Runs the heroku install command, if necessary.
+      - heroku/deploy-via-git # Deploys branch to Heroku via git push.
