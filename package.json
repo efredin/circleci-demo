@@ -10,7 +10,7 @@
   "scripts": {
     "lint": "eslint ./src",
     "start": "node --experimental-modules ./src/index.js",
-    "test": "jest --coverage"
+    "test": "jest --coverage --forceExit"
   },
   "dependencies": {
     "express": "^4.17.1",
