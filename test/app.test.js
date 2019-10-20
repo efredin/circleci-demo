@@ -7,17 +7,18 @@ import createApp from '../src/app';
 describe('app', () => {
     dotenv.config({ path: './test/test.env' });
     const { PORT, CONNECTION_STRING, DATABASE } = process.env;
-
-    const app = createApp();
-    const server = http.createServer(app);
     const baseUrl = `http://localhost:${PORT}`;
+    let app, server;
 
-    beforeAll(async () => {
-        await server.listen(PORT);
+    beforeAll(done => {
+        // start http server
+        app = createApp();
+        server = http.createServer(app);
+        server.listen(PORT, done);
     });
 
     afterAll(async () => {
-        // connect to database
+        // drop test data from database
         const client = await mongodb.MongoClient.connect(CONNECTION_STRING, {
             useNewUrlParser: true,
             useUnifiedTopology: true
@@ -25,9 +26,13 @@ describe('app', () => {
         const db = client.db(DATABASE);
         const counterCollection = db.collection('counter');
         await counterCollection.drop();
-
         await client.close();
-        await server.close();
+    });
+
+    afterAll(done => {
+        server.close(() => {
+            setTimeout(done, 100);
+        });
     });
 
     it('creates counters for new routes', async () => {
