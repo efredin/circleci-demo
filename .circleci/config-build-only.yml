@@ -1,0 +1,25 @@
+version: 2.1
+jobs:
+  build:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/node:12
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+          - node-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          - node-{{ .Branch }}-
+
+      - run: yarn
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: node-{{ .Branch }}-{{ checksum "yarn.lock" }}
+
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - repo
