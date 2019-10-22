@@ -20,7 +20,10 @@ const createApp = () => {
 
             // increment counter for current route
             const counter = await counterCollection.findOneAndUpdate(
-                { route: request.path },
+                { 
+                    route: request.path,
+                    hello: 'DevOps Meetup'
+                },
                 { $inc: { hits: 1 } },
                 { upsert: true, returnOriginal: false }
             );
