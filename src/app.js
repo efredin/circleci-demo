@@ -32,9 +32,6 @@ const createApp = () => {
         }
     });
 
-    // intentional linting error
-    const test = "feed me cookies!";
-
     return app;
 };
 
