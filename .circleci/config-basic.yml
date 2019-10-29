@@ -20,8 +20,3 @@ jobs:
           key: node-{{ .Branch }}-{{ checksum "yarn.lock" }}
 
       - run: yarn run lint
-
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - repo

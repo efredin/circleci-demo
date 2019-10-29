@@ -22,7 +22,7 @@ const createApp = () => {
             const counter = await counterCollection.findOneAndUpdate(
                 { 
                     route: request.path,
-                    hello: 'DevOps Meetup'
+                    hello: 'intuit lunch & learn'
                 },
                 { $inc: { hits: 1 } },
                 { upsert: true, returnOriginal: false }
