@@ -1,4 +1,17 @@
 version: 2.1
+orbs:
+  heroku: circleci/heroku@0.0.8
+workflows:
+  version: 2
+  demo:
+    jobs:
+      - build
+      - publish:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
 jobs:
   build:
     working_directory: ~/repo
@@ -22,3 +35,17 @@ jobs:
 
       - run: yarn run lint
       - run: yarn test
+
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - repo
+
+  publish:
+    executor: heroku/default # Uses the basic buildpack-deps image, which has the prerequisites for installing heroku's CLI.
+    working_directory: ~/repo
+    steps:
+      - attach_workspace:
+          at: ~/
+      - heroku/install # Runs the heroku install command, if necessary.
+      - heroku/deploy-via-git # Deploys branch to Heroku via git push.
