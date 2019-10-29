@@ -33,6 +33,8 @@ const createApp = () => {
             console.error(error);
             response.status(500).json({ error });
         }
+
+        var test = false;
     });
 
     return app;
